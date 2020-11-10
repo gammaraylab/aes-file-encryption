@@ -17,33 +17,14 @@ class FileListFragment : Fragment() {
     private lateinit var filesAdapter:FilesRecyclerAdapter
     private lateinit var path:String
     private lateinit var callBack:OnItemClickListener
+
     interface OnItemClickListener{
         fun onCLick(fileModel:FileModel)
         fun onLongClick(fileModel: FileModel)
     }
-    companion object{
-        private const val ARG_PATH="com.gammaray.aesfileencryption.fileslist.path"
-        fun build(block:Builder.()->Unit)=Builder().apply(block).build()
-    }
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_file_list,container,false)
-    }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try{
-            callBack=context as OnItemClickListener
-        }catch (e: Exception){
-            throw Exception("${context} should implement FileListFragment.OnItemClickListener")
-        }
-    }
     class Builder{
         var path=""
-
         fun build():FileListFragment{
             val fragment=FileListFragment()
             val args=Bundle()
@@ -53,6 +34,25 @@ class FileListFragment : Fragment() {
         }
     }
 
+    companion object{
+        private const val ARG_PATH="com.gammaray.aesfileencryption.fileslist.path"
+        fun build(block:Builder.()->Unit)=Builder().apply(block).build()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_file_list,container,false)
+    }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try{
+            callBack=context as OnItemClickListener
+        }catch (e: Exception){
+            throw Exception("${context} should implement FileListFragment.OnItemClickListener")
+        }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -65,15 +65,13 @@ class FileListFragment : Fragment() {
 
         initViews()
     }
-
     private fun initViews() {
         filesRecyclerView.layoutManager = LinearLayoutManager(context)
         filesAdapter = FilesRecyclerAdapter()
         filesRecyclerView.adapter = filesAdapter
         updateDate()
     }
-
-    fun updateDate() {
+    private fun updateDate() {
         val list= getFilesFromPath(path) ?: return
         val files =fileModelsFromFiles(list)
         if (files.isEmpty()) {
