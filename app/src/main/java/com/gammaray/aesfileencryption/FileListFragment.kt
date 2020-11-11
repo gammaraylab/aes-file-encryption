@@ -50,7 +50,7 @@ class FileListFragment : Fragment() {
         try{
             callBack=context as OnItemClickListener
         }catch (e: Exception){
-            throw Exception("${context} should implement FileListFragment.OnItemClickListener")
+            throw Exception("$context should implement FileListFragment.OnItemClickListener")
         }
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,11 +74,10 @@ class FileListFragment : Fragment() {
     private fun updateDate() {
         val list= getFilesFromPath(path) ?: return
         val files =fileModelsFromFiles(list)
-        if (files.isEmpty()) {
+        if (files.isEmpty())
             emptyFolderLayout.visibility = View.VISIBLE
-        } else {
+        else
             emptyFolderLayout.visibility = View.INVISIBLE
-        }
 
         filesAdapter.updateData(files)
     }

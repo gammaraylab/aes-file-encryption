@@ -3,7 +3,8 @@ package com.gammaray.aesfileencryption
 class BackStackManager {
     private var files= mutableListOf<FileModel>()
     var onStackChangedListener:((List<FileModel>)->Unit)?=null
-    val top=files.last()
+    val top:FileModel
+        get() = files.last()
     fun addToStack(fileModel: FileModel){
         files.add(fileModel)
         onStackChangedListener?.invoke(files)

@@ -15,10 +15,8 @@ class BreadcrumbsRecyclerAdapter : RecyclerView.Adapter<BreadcrumbsRecyclerAdapt
                 .inflate(R.layout.item_recycler_breadcrumb,parent,false)
         return ViewHolder(view)
     }
-
     override fun getItemCount()=files.size
-    override fun onBindViewHolder(holder: ViewHolder, position: Int)=
-            holder.bindView(position)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int)= holder.bindView(position)
     fun updateData(files:List<FileModel>){
         this.files=files
         notifyDataSetChanged()
