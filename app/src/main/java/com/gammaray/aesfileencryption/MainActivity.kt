@@ -7,28 +7,31 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
-import android.view.View
-import androidx.appcompat.widget.ActivityChooserView
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_main.*
-
+import kotlinx.android.synthetic.main.dialog_enter_name.view.*
+import com.gammaray.aesfileencryption.deleteFile as FileUtilsDeleteFile
 class MainActivity : AppCompatActivity(), FileListFragment.OnItemClickListener {
 
     private val backStackManager=BackStackManager()
     private lateinit var breadcrumbsRecyclerAdapter: BreadcrumbsRecyclerAdapter
     private val READ_REQUEST_CODE=453
 
+    companion object {
+        private const val OPTIONS_DIALOG_TAG: String = "com.gammaray.aesfileencryption.options_dialog"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        window.decorView.systemUiVisibility=window.decorView.systemUiVisibility.or(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
         setContentView(R.layout.activity_main)
-        checkPermissions()
         if(savedInstanceState==null){
             val fileListFragment=FileListFragment.build {
-                path=/*getExternalFilesDir(null)?.absolutePath.toString()*/Environment.getExternalStorageDirectory().absolutePath
+                path=Environment.getExternalStorageDirectory().absolutePath
             }
             supportFragmentManager.beginTransaction()
                 .add(R.id.container,fileListFragment)
@@ -36,19 +39,25 @@ class MainActivity : AppCompatActivity(), FileListFragment.OnItemClickListener {
                 .commit()
         }
 
-//        openDocTree()
-
+        checkPermissions()
         initViews()
         initBackStack()
     }
-    override fun onCLick(fileModel: FileModel) {
+    override fun onClick(fileModel: FileModel) {
         if(fileModel.fileType==FileType.FOLDER)
             addFileFragment(fileModel)
         else
-            this.launchFileIntent(fileModel)
+            launchFileIntent(fileModel)
     }
     override fun onLongClick(fileModel: FileModel) {
-        TODO("Not yet implemented")
+        val optionsDialog = FileOptionsDialog.build {}
+
+        optionsDialog.onDeleteClickListener = {
+            FileUtilsDeleteFile(fileModel.path)
+            updateContentOfCurrentFragment()
+        }
+
+        optionsDialog.show(supportFragmentManager, OPTIONS_DIALOG_TAG)
     }
     override fun onBackPressed() {
         super.onBackPressed()
@@ -57,31 +66,79 @@ class MainActivity : AppCompatActivity(), FileListFragment.OnItemClickListener {
             finish()
         }
     }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menuNewFile -> createNewFileInCurrentDirectory()
+            R.id.menuNewFolder -> createNewFolderInCurrentDirectory()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+    private fun createNewFileInCurrentDirectory() {
+        val bottomSheetDialog = BottomSheetDialog(this)
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_enter_name, null)
+        view.createButton.setOnClickListener {
+            val fileName = view.nameEditText.text.toString()
+            if (fileName.isNotEmpty()) {
+                createNewFile(fileName, backStackManager.top.path) { _, _ ->
+                    bottomSheetDialog.dismiss()
+                    updateContentOfCurrentFragment()
+                }
+            }
+        }
+        bottomSheetDialog.setContentView(view)
+        bottomSheetDialog.show()
+    }
+    private fun updateContentOfCurrentFragment() {
+        val broadcastIntent = Intent()
+        broadcastIntent.action = applicationContext.getString(R.string.file_change_broadcast)
+        broadcastIntent.putExtra(FileChangedBroadcastReceiver.EXTRA_PATH, backStackManager.top.path)
+        sendBroadcast(broadcastIntent)
+    }
+    private fun createNewFolderInCurrentDirectory() {
+        val bottomSheetDialog = BottomSheetDialog(this)
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_enter_name, null)
+        view.createButton.setOnClickListener {
+            val fileName = view.nameEditText.text.toString()
+            if (fileName.isNotEmpty()) {
+                createNewFolder(fileName, backStackManager.top.path) { _, message ->
+                    bottomSheetDialog.dismiss()
+//                    coordinatorLayout.createShortSnackbar(message)
+                    updateContentOfCurrentFragment()
+                }
+            }
+        }
+        bottomSheetDialog.setContentView(view)
+        bottomSheetDialog.show()
+    }
     private fun addFileFragment(fileModel: FileModel){
         val fileListFragment=FileListFragment.build {
             path=fileModel.path
         }
         backStackManager.addToStack(fileModel)
+
         val fragmentTransaction=supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.container, fileListFragment)
         fragmentTransaction.addToBackStack(fileModel.path)
         fragmentTransaction.commit()
     }
     private fun initBackStack(){
-        backStackManager.onStackChangedListener={
+        backStackManager.onStackChangeListener={
             updateAdapterData(it)
         }
         backStackManager.addToStack(fileModel = FileModel(Environment.getExternalStorageDirectory().absolutePath,FileType.FOLDER,"/",0.0))
     }
     private fun initViews(){
-//        setSupportActionBar(toolBar)
-        recyclerViewBreadcrumbs.layoutManager=LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
-        breadcrumbsRecyclerAdapter= BreadcrumbsRecyclerAdapter()
-        recyclerViewBreadcrumbs.adapter=breadcrumbsRecyclerAdapter
-        breadcrumbsRecyclerAdapter.onItemClickListener={
-            supportFragmentManager.popBackStack(it.path,2)
+        recyclerViewBreadcrumbs.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        breadcrumbsRecyclerAdapter = BreadcrumbsRecyclerAdapter()
+        recyclerViewBreadcrumbs.adapter = breadcrumbsRecyclerAdapter
+        breadcrumbsRecyclerAdapter.onItemClickListener = {
+            supportFragmentManager.popBackStack(it.path, 2);
             backStackManager.popFromStackTill(it)
-
         }
     }
     private fun updateAdapterData(files:List<FileModel>){

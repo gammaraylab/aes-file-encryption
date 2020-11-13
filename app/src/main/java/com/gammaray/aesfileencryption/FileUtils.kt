@@ -27,3 +27,49 @@ import java.io.File
         intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         startActivity(Intent.createChooser(intent, "Select Application"))
     }
+    fun createNewFile(fileName: String, path: String, callback: (result: Boolean, message: String) -> Unit) {
+        val fileAlreadyExists = File(path).listFiles()?.map { it.name }?.contains(fileName) as Boolean
+        if (fileAlreadyExists) {
+            callback(false, "'${fileName}' already exists.")
+        } else {
+            val file = File(path, fileName)
+            try {
+                val result = file.createNewFile()
+                if (result) {
+                    callback(result, "File '${fileName}' created successfully.")
+                } else {
+                    callback(result, "Unable to create file '${fileName}'.")
+                }
+            } catch (e: Exception) {
+                callback(false, "Unable to create file. Please try again.")
+                e.printStackTrace()
+            }
+        }
+    }
+    fun createNewFolder(folderName: String, path: String, callback: (result: Boolean, message: String) -> Unit) {
+        val folderAlreadyExists = File(path).listFiles()?.map { it.name }?.contains(folderName) as Boolean
+        if (folderAlreadyExists) {
+            callback(false, "'${folderName}' already exists.")
+        } else {
+            val file = File(path, folderName)
+            try {
+                val result = file.mkdir()
+                if (result) {
+                    callback(result, "Folder '${folderName}' created successfully.")
+                } else {
+                    callback(result, "Unable to create folder '${folderName}'.")
+                }
+            } catch (e: Exception) {
+                callback(false, "Unable to create folder. Please try again.")
+                e.printStackTrace()
+            }
+        }
+    }
+    fun deleteFile(path: String) {
+        val file = File(path)
+        if (file.isDirectory) {
+            file.deleteRecursively()
+        } else {
+            file.delete()
+        }
+    }

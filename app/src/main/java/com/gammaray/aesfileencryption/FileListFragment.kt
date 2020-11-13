@@ -1,6 +1,8 @@
 package com.gammaray.aesfileencryption
 
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,10 +19,16 @@ class FileListFragment : Fragment() {
     private lateinit var filesAdapter:FilesRecyclerAdapter
     private lateinit var path:String
     private lateinit var callBack:OnItemClickListener
+    private lateinit var fileChangeBroadcastReceiver: FileChangedBroadcastReceiver
 
     interface OnItemClickListener{
-        fun onCLick(fileModel:FileModel)
+        fun onClick(fileModel:FileModel)
         fun onLongClick(fileModel: FileModel)
+    }
+
+    companion object{
+        private const val ARG_PATH="com.gammaray.aesfileencryption.fileslist.path"
+        fun build(block:Builder.()->Unit)=Builder().apply(block).build()
     }
 
     class Builder{
@@ -34,11 +42,28 @@ class FileListFragment : Fragment() {
         }
     }
 
-    companion object{
-        private const val ARG_PATH="com.gammaray.aesfileencryption.fileslist.path"
-        fun build(block:Builder.()->Unit)=Builder().apply(block).build()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val filePath = arguments?.getString(ARG_PATH)
+        if (filePath == null) {
+            Toast.makeText(context, "Path should not be null!", Toast.LENGTH_SHORT).show()
+            return
+        }
+        path = filePath
+        fileChangeBroadcastReceiver=FileChangedBroadcastReceiver(path){
+            updateDate()
+        }
     }
 
+    override fun onResume() {
+        super.onResume()
+        context?.registerReceiver(fileChangeBroadcastReceiver,IntentFilter(FileChangedBroadcastReceiver.EXTRA_PATH))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        context?.unregisterReceiver(fileChangeBroadcastReceiver)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,20 +80,18 @@ class FileListFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val filePath = arguments?.getString(ARG_PATH)
-        if (filePath == null) {
-            Toast.makeText(context, "Path should not be null!", Toast.LENGTH_SHORT).show()
-            return
-        }
-        path = filePath
-
         initViews()
     }
     private fun initViews() {
         filesRecyclerView.layoutManager = LinearLayoutManager(context)
         filesAdapter = FilesRecyclerAdapter()
         filesRecyclerView.adapter = filesAdapter
+        filesAdapter.onItemClickListener={
+            callBack.onClick(it)
+        }
+        filesAdapter.onItemLongClickListener={
+            callBack.onLongClick(it)
+        }
         updateDate()
     }
     private fun updateDate() {

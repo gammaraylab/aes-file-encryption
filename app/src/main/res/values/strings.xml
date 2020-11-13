@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AES file encryption</string>
+    <string name="file_change_broadcast">com.gammaray.aesfileencryption.file_change_broadcast</string>
 </resources>
