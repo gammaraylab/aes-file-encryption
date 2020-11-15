@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".main.MainActivity">
+
+    <item
+        android:id="@+id/menuCancel"
+        android:title="Cancel"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menuPasteFile"
+        android:title="Paste"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/subMenu"
+        android:title="Options"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction">
+        <menu>
+            <item
+                android:id="@+id/menuNewFile"
+                android:title="New File"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menuNewFolder"
+                android:title="New Folder"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+
+</menu>
