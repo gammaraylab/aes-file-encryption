@@ -10,12 +10,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_enter_name.view.*
+import java.io.File
 import com.gammaray.aesfileencryption.deleteFile as FileUtilsDeleteFile
 class MainActivity : AppCompatActivity(), FileListFragment.OnItemClickListener {
 
@@ -56,7 +58,39 @@ class MainActivity : AppCompatActivity(), FileListFragment.OnItemClickListener {
             FileUtilsDeleteFile(fileModel.path)
             updateContentOfCurrentFragment()
         }
-
+        optionsDialog.onCopyClickListener={
+            Toast.makeText(this@MainActivity,"not yet implemented",Toast.LENGTH_SHORT).show()
+        }
+        optionsDialog.onEncryptClickListener={
+            if(fileModel.fileType== FileType.FILE) {
+                val aes = AES("anadi mitra gaur")
+                val file = File(fileModel.path)
+                val output=File(fileModel.onlyPath(),"${fileModel.nameWithoutExtension()}-encrypted.txt")
+                if (aes.encrypt(file)?.equals(null)?.not() as Boolean) {
+                    val cipherText = aes.encrypt(file)!!
+                    output.writeBytes(cipherText)
+                    output.createNewFile()
+                    Log.e("OUTPUT","${output.name} /${output.path} /${fileModel.path}")
+                } else
+                    Toast.makeText(this, "cannot encrypt", Toast.LENGTH_SHORT).show()
+            }else
+                Toast.makeText(this,"cannot encrypt folder",Toast.LENGTH_SHORT).show()
+        }
+        optionsDialog.onDecryptClickListener={
+            if(fileModel.fileType== FileType.FILE) {
+                val aes = AES("anadi mitra gaur")
+                val file = File(fileModel.path)
+                val output=File(fileModel.onlyPath(),"${fileModel.nameWithoutExtension()}-decrypted.txt")
+                val cipherText = aes.decrypt(file)
+                if (cipherText !=null) {
+                    output.writeBytes(cipherText)
+                    output.createNewFile()
+                    Log.e("OUTPUT","${output.name} /${output.path} /${fileModel.path}")
+                } else
+                    Toast.makeText(this, "cannot decrypt", Toast.LENGTH_SHORT).show()
+            }else
+                Toast.makeText(this,"cannot decrypt folder",Toast.LENGTH_SHORT).show()
+        }
         optionsDialog.show(supportFragmentManager, OPTIONS_DIALOG_TAG)
     }
     override fun onBackPressed() {
@@ -98,6 +132,7 @@ class MainActivity : AppCompatActivity(), FileListFragment.OnItemClickListener {
         broadcastIntent.action = applicationContext.getString(R.string.file_change_broadcast)
         broadcastIntent.putExtra(FileChangedBroadcastReceiver.EXTRA_PATH, backStackManager.top.path)
         sendBroadcast(broadcastIntent)
+        onContentChanged()
     }
     private fun createNewFolderInCurrentDirectory() {
         val bottomSheetDialog = BottomSheetDialog(this)

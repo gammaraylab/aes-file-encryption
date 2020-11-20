@@ -7,17 +7,17 @@
     <item
         android:id="@+id/menuCancel"
         android:title="Cancel"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/menuPasteFile"
         android:title="Paste"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/subMenu"
         android:title="Options"
-        app:showAsAction="always"
+        app:showAsAction="never"
         tools:ignore="AlwaysShowAction">
         <menu>
             <item

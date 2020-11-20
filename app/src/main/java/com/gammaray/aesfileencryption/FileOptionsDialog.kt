@@ -10,6 +10,8 @@ import kotlinx.android.synthetic.main.dialog_file_options.*
 class FileOptionsDialog : BottomSheetDialogFragment() {
     var onDeleteClickListener: (()->Unit)? = null
     var onCopyClickListener: (()->Unit)? = null
+    var onEncryptClickListener:(()->Unit)?=null
+    var onDecryptClickListener:(()->Unit)?=null
 
     companion object{
         fun build(block: Builder.()->Unit):FileOptionsDialog=
@@ -42,6 +44,14 @@ class FileOptionsDialog : BottomSheetDialogFragment() {
 
         copyTextView.setOnClickListener {
             onCopyClickListener?.invoke()
+            dismiss()
+        }
+        encryptTextView.setOnClickListener {
+            onEncryptClickListener?.invoke()
+            dismiss()
+        }
+        decryptTextView.setOnClickListener {
+            onDecryptClickListener?.invoke()
             dismiss()
         }
     }

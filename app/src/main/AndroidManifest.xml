@@ -20,8 +20,8 @@
             </intent-filter>
         </activity>
         <provider
-            android:authorities="com.gammaray.aesfileencryption.GenricFileProvider"
-            android:name=".GenricFileProvider"
+            android:authorities="com.gammaray.aesfileencryption.GenericFileProvider"
+            android:name=".GenericFileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
