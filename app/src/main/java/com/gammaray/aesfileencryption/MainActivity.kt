@@ -1,6 +1,7 @@
 package com.gammaray.aesfileencryption
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_OPEN_DOCUMENT_TREE
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_enter_name.view.*
 import java.io.File
+import java.util.*
 import com.gammaray.aesfileencryption.deleteFile as FileUtilsDeleteFile
 class MainActivity : AppCompatActivity(), FileListFragment.OnItemClickListener {
 
@@ -26,7 +28,14 @@ class MainActivity : AppCompatActivity(), FileListFragment.OnItemClickListener {
     private val READ_REQUEST_CODE=453
 
     companion object {
+        private lateinit var instance:Context
         private const val OPTIONS_DIALOG_TAG: String = "com.gammaray.aesfileencryption.options_dialog"
+        fun errorDisplay(error:String){
+            Toast.makeText(instance,error,Toast.LENGTH_LONG).show()
+        }
+    }
+    init{
+        instance=this
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
