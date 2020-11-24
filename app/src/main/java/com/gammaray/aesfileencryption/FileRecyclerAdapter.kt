@@ -39,6 +39,7 @@ class FilesRecyclerAdapter : RecyclerView.Adapter<FilesRecyclerAdapter.ViewHolde
         fun bindView(position: Int) {
             val fileModel = filesList[position]
             itemView.nameTextView.text = fileModel.name
+            itemView.clipToOutline=true
             val sb=StringBuilder()
 
             if (fileModel.fileType == FileType.FOLDER) {
@@ -53,8 +54,24 @@ class FilesRecyclerAdapter : RecyclerView.Adapter<FilesRecyclerAdapter.ViewHolde
                 itemView.folderTextView.visibility = View.GONE
                 itemView.totalSizeTextView.visibility = View.VISIBLE
                 sb.clear()
-                sb.append(String.format("%.2f", fileModel.sizeInMB))
-                sb.append("mB")
+
+                if(fileModel.sizeInGB>=1) {
+                    sb.append(String.format("%.2f", fileModel.sizeInGB))
+                    sb.append(" GB")
+                }
+                else if(fileModel.sizeInMB>=1) {
+                    sb.append(String.format("%.2f", fileModel.sizeInMB))
+                    sb.append(" MB")
+                }
+                else if(fileModel.sizeInKB>=1) {
+                    sb.append(String.format("%.2f", fileModel.sizeInKB))
+                    sb.append(" KB")
+                }
+                else {
+                    sb.append(fileModel.sizeInB)
+                    sb.append(" Byte")
+                }
+
                 itemView.totalSizeTextView.text = sb
             }
         }

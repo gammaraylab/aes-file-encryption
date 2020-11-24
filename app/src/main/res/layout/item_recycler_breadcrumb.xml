@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:padding="8dp"
+    android:background="@color/color_breadcrumb_background"
     >
 
     <ImageView

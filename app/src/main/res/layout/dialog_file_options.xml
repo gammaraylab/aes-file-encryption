@@ -4,46 +4,40 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:paddingBottom="24dp"
+    android:paddingBottom="15dp"
     android:orientation="vertical"
     >
 
+<!--
     <TextView
         android:id="@+id/fileOptionsTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="24dp"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:textAppearance="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
+        android:textSize="15sp"
         android:text="Options"
         />
+-->
     <TextView
         android:id="@+id/deleteTextView"
         style="@style/FileDialogOption"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="Delete"
         />
     <TextView
         android:id="@+id/copyTextView"
         style="@style/FileDialogOption"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:text="Copy"
         />
     <TextView
         android:id="@+id/encryptTextView"
         style="@style/FileDialogOption"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="Encrypt"
         />
     <TextView
         android:id="@+id/decryptTextView"
         style="@style/FileDialogOption"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="Decrypt"
         />
 

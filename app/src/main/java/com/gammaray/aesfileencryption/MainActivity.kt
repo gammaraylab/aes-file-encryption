@@ -19,7 +19,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_enter_name.view.*
 import java.io.File
-import java.util.*
 import com.gammaray.aesfileencryption.deleteFile as FileUtilsDeleteFile
 class MainActivity : AppCompatActivity(), FileListFragment.OnItemClickListener {
 
@@ -75,11 +74,10 @@ class MainActivity : AppCompatActivity(), FileListFragment.OnItemClickListener {
                 val aes = AES("anadi mitra gaur")
                 val file = File(fileModel.path)
                 val output=File(fileModel.onlyPath(),"${fileModel.nameWithoutExtension()}-encrypted.txt")
-                if (aes.encrypt(file)?.equals(null)?.not() as Boolean) {
-                    val cipherText = aes.encrypt(file)!!
+                val cipherText=aes.encrypt(file)
+                if (cipherText != null) {
                     output.writeBytes(cipherText)
                     output.createNewFile()
-                    Log.e("OUTPUT","${output.name} /${output.path} /${fileModel.path}")
                 } else
                     Toast.makeText(this, "cannot encrypt", Toast.LENGTH_SHORT).show()
             }else
@@ -90,11 +88,10 @@ class MainActivity : AppCompatActivity(), FileListFragment.OnItemClickListener {
                 val aes = AES("anadi mitra gaur")
                 val file = File(fileModel.path)
                 val output=File(fileModel.onlyPath(),"${fileModel.nameWithoutExtension()}-decrypted.txt")
-                val cipherText = aes.decrypt(file)
-                if (cipherText !=null) {
-                    output.writeBytes(cipherText)
+                val plainText = aes.decrypt(file)
+                if (plainText !=null) {
+                    output.writeBytes(plainText)
                     output.createNewFile()
-                    Log.e("OUTPUT","${output.name} /${output.path} /${fileModel.path}")
                 } else
                     Toast.makeText(this, "cannot decrypt", Toast.LENGTH_SHORT).show()
             }else
@@ -174,7 +171,7 @@ class MainActivity : AppCompatActivity(), FileListFragment.OnItemClickListener {
         backStackManager.onStackChangeListener={
             updateAdapterData(it)
         }
-        backStackManager.addToStack(fileModel = FileModel(Environment.getExternalStorageDirectory().absolutePath,FileType.FOLDER,"/",0.0))
+        backStackManager.addToStack(fileModel = FileModel(Environment.getExternalStorageDirectory().absolutePath,FileType.FOLDER,"Internal storage",0))
     }
     private fun initViews(){
         recyclerViewBreadcrumbs.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)

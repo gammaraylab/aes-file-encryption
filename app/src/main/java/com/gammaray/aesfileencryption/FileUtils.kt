@@ -14,13 +14,9 @@ import java.io.File
     }
     fun fileModelsFromFiles(files:List<File>):List<FileModel>{
         return files.map {
-            FileModel(it.path, FileType.fileType(it),it.name,convertFileSizeToMB(it.length()),it.extension,it.listFiles()?.size?:0)
+            FileModel(it.path, FileType.fileType(it),it.name,it.length(),it.extension,it.listFiles()?.size?:0)
         }
     }
-    fun convertFileSizeToMB(bytes:Long):Double{
-        return bytes.toDouble()/(1024*1024)
-    }
-
     fun Context.launchFileIntent(fileModel: FileModel) {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = FileProvider.getUriForFile(this, packageName, File(fileModel.path))

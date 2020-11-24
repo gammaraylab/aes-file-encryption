@@ -8,5 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="color_breadcrumb_background">#FFFFFF</color>
+    <color name="color_divider">#BCBCBC</color>
+    <color name="color_filelist_recyclerview">#FFFFFF</color>
     <color name="color_breadcrumb_icon">#BCBCBC</color>
 </resources>
