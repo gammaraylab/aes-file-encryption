@@ -8,7 +8,6 @@
     android:padding="8dp"
     android:background="@color/color_breadcrumb_background"
     >
-
     <ImageView
         android:id="@+id/imageViewBreadcrumbIcon"
         android:layout_width="20dp"
