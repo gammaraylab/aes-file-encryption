@@ -72,7 +72,6 @@ class MainActivity : AppCompatActivity(), FileListFragment.OnItemClickListener {
             Toast.makeText(this@MainActivity,"not yet implemented",Toast.LENGTH_SHORT).show()
         }
         optionsDialog.onEncryptClickListener={
-            var key=""
             val dialogView = LayoutInflater.from(this).inflate(R.layout.alert_dialog_enter_key, null)
             val builder=AlertDialog.Builder(this)
                 .setView(dialogView)
@@ -80,7 +79,7 @@ class MainActivity : AppCompatActivity(), FileListFragment.OnItemClickListener {
             val alertDialog=builder.show()
             dialogView.proceedButton.setOnClickListener{
                 alertDialog.dismiss()
-                key=dialogView.keyEditText.toString()
+                val key=dialogView.keyEditText.toString()
                 if(key.isEmpty())
                     Toast.makeText(this,"empty key not allowed",Toast.LENGTH_SHORT).show()
                 else if(fileModel.fileType== FileType.FILE ) {
