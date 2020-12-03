@@ -1,4 +1,4 @@
-package com.gammaray.aesfileencryption
+package com.gammaray.aesfileencryption.FileUtils
 
 import android.content.Context
 import android.content.Intent

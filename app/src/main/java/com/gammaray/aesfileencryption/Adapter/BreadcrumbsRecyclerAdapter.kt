@@ -1,9 +1,11 @@
-package com.gammaray.aesfileencryption
+package com.gammaray.aesfileencryption.Adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.gammaray.aesfileencryption.FileUtils.FileModel
+import com.gammaray.aesfileencryption.R
 import kotlinx.android.synthetic.main.item_recycler_breadcrumb.view.*
 
 class BreadcrumbsRecyclerAdapter : RecyclerView.Adapter<BreadcrumbsRecyclerAdapter.ViewHolder>() {

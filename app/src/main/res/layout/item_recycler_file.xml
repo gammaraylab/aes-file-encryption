@@ -11,7 +11,7 @@
         android:id="@+id/thumbnailImageview"
         android:layout_width="54dp"
         android:layout_height="54dp"
-        android:background="@color/black"
+        android:background="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:contentDescription="replaced by folder/file icon"

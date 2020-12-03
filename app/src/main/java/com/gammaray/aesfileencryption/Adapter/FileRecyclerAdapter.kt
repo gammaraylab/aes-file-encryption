@@ -1,11 +1,16 @@
-package com.gammaray.aesfileencryption
+package com.gammaray.aesfileencryption.Adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.gammaray.aesfileencryption.Encryption.AES
+import com.gammaray.aesfileencryption.FileUtils.FileModel
+import com.gammaray.aesfileencryption.FileUtils.FileType
+import com.gammaray.aesfileencryption.R
 import kotlinx.android.synthetic.main.item_recycler_file.view.*
 import java.lang.StringBuilder
+import java.util.*
 
 class FilesRecyclerAdapter : RecyclerView.Adapter<FilesRecyclerAdapter.ViewHolder>() {
 
@@ -39,10 +44,11 @@ class FilesRecyclerAdapter : RecyclerView.Adapter<FilesRecyclerAdapter.ViewHolde
         fun bindView(position: Int) {
             val fileModel = filesList[position]
             itemView.nameTextView.text = fileModel.name
-            itemView.clipToOutline=true
+//            itemView.clipToOutline=true
             val sb=StringBuilder()
 
             if (fileModel.fileType == FileType.FOLDER) {
+                itemView.thumbnailImageview.setImageResource(R.drawable.ic_folder_grey)
                 itemView.folderTextView.visibility = View.VISIBLE
                 itemView.totalSizeTextView.visibility = View.GONE
                 sb.clear()
@@ -51,6 +57,26 @@ class FilesRecyclerAdapter : RecyclerView.Adapter<FilesRecyclerAdapter.ViewHolde
                 sb.append(" files)")
                 itemView.folderTextView.text = sb
             } else {
+                when(fileModel.extension.toLowerCase(Locale.ROOT)){
+                    "txt"->itemView.thumbnailImageview.setImageResource(R.drawable.ic_text_file)
+                    "pdf"->itemView.thumbnailImageview.setImageResource(R.drawable.ic_pdf_file)
+                    AES.ENCRYPT->itemView.thumbnailImageview.setImageResource(R.drawable.ic_encrypted_file)
+                    "jpg"->itemView.thumbnailImageview.setImageResource(R.drawable.ic_image_file)
+                    "jpeg"->itemView.thumbnailImageview.setImageResource(R.drawable.ic_image_file)
+                    "png"->itemView.thumbnailImageview.setImageResource(R.drawable.ic_image_file)
+                    "mp4"->itemView.thumbnailImageview.setImageResource(R.drawable.ic_video_file)
+                    "mkv"->itemView.thumbnailImageview.setImageResource(R.drawable.ic_video_file)
+                    "avi"->itemView.thumbnailImageview.setImageResource(R.drawable.ic_video_file)
+                    "mp3"->itemView.thumbnailImageview.setImageResource(R.drawable.ic_music_file)
+                    "m4a"->itemView.thumbnailImageview.setImageResource(R.drawable.ic_music_file)
+                    "doc"->itemView.thumbnailImageview.setImageResource(R.drawable.ic_doc_file)
+                    "docx"->itemView.thumbnailImageview.setImageResource(R.drawable.ic_docx_file)
+                    "html"->itemView.thumbnailImageview.setImageResource(R.drawable.ic_html_file)
+                    "htm"->itemView.thumbnailImageview.setImageResource(R.drawable.ic_html_file)
+
+                    else->itemView.thumbnailImageview.setImageResource(R.drawable.ic_unknown_file)
+                }
+
                 itemView.folderTextView.visibility = View.GONE
                 itemView.totalSizeTextView.visibility = View.VISIBLE
                 sb.clear()

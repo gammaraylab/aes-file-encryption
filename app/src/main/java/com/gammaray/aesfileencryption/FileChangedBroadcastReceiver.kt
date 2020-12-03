@@ -3,6 +3,7 @@ package com.gammaray.aesfileencryption
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.gammaray.aesfileencryption.Activity.MainActivity
 
 class FileChangedBroadcastReceiver(private val path: String, private val onChange: () -> Unit) : BroadcastReceiver() {
 
@@ -11,8 +12,9 @@ class FileChangedBroadcastReceiver(private val path: String, private val onChang
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        val filePath = intent?.extras?.getString(EXTRA_PATH)
-        if (filePath.equals(path))
+        val filePath = intent?.extras?.getString(EXTRA_PATH).toString()
+        if (filePath == path)
             onChange.invoke()
+        MainActivity.log("onChange")
     }
 }

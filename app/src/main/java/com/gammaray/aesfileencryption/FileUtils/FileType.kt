@@ -1,4 +1,4 @@
-package com.gammaray.aesfileencryption
+package com.gammaray.aesfileencryption.FileUtils
 
 import java.io.File
 
@@ -7,8 +7,8 @@ enum class FileType {
     FOLDER;
     companion object{
         fun fileType(file:File)=when(file.isDirectory){
-            true->FOLDER
-            false->FILE
+            true-> FOLDER
+            false-> FILE
         }
 
     }

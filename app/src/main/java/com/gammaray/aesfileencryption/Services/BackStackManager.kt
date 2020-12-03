@@ -1,4 +1,6 @@
-package com.gammaray.aesfileencryption
+package com.gammaray.aesfileencryption.Services
+
+import com.gammaray.aesfileencryption.FileUtils.FileModel
 
 class BackStackManager {
     private var files = mutableListOf<FileModel>()

@@ -1,28 +1,29 @@
 package com.gammaray.aesfileencryption
 
 import android.content.Context
-import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.gammaray.aesfileencryption.Adapter.FilesRecyclerAdapter
+import com.gammaray.aesfileencryption.FileUtils.FileModel
+import com.gammaray.aesfileencryption.FileUtils.fileModelsFromFiles
+import com.gammaray.aesfileencryption.FileUtils.getFilesFromPath
 import kotlinx.android.synthetic.main.fragment_file_list.*
 import java.lang.Exception
 
 class FileListFragment : Fragment() {
-    private lateinit var filesAdapter:FilesRecyclerAdapter
+    private lateinit var filesAdapter: FilesRecyclerAdapter
     private lateinit var path:String
     private lateinit var callBack:OnItemClickListener
     private lateinit var fileChangeBroadcastReceiver: FileChangedBroadcastReceiver
 
     interface OnItemClickListener{
-        fun onClick(fileModel:FileModel)
+        fun onClick(fileModel: FileModel)
         fun onLongClick(fileModel: FileModel)
     }
 
@@ -96,7 +97,7 @@ class FileListFragment : Fragment() {
     }
     private fun updateDate() {
         val list= getFilesFromPath(path) ?: return
-        val files =fileModelsFromFiles(list)
+        val files = fileModelsFromFiles(list)
         if (files.isEmpty())
             emptyFolderLayout.visibility = View.VISIBLE
         else

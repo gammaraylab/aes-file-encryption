@@ -1,4 +1,4 @@
-package com.gammaray.aesfileencryption
+package com.gammaray.aesfileencryption.FileUtils
 
 import androidx.core.content.FileProvider
 
